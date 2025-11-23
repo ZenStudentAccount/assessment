@@ -8,26 +8,40 @@ assessmentButton.addEventListener(
     'click',
     () => {
         const userName = userNameInput.value;
-        if(userName.length === 0) {
+        if (userName.length === 0) {
             return;
         }
 
         console.log(assessment(userName));
 
         resultDivision.innerText = '';
-        const header = document.createElement('h3');
-        header.innerText = '診断結果';
-        resultDivision.appendChild(header);
+
+        // headerDivision の作成
+        const headerDivision = document.createElement('div');
+        headerDivision.setAttribute('class', 'card-header text-bg-primary');
+        headerDivision.innerText = '診断結果';
+
+        // bodyDivision の作成
+        const bodyDivision = document.createElement('div');
+        bodyDivision.setAttribute('class', 'card-body');
 
         const paragraph = document.createElement('p');
+        paragraph.setAttribute('class', 'card-text');
         const result = assessment(userName);
         paragraph.innerText = result;
-        resultDivision.appendChild(paragraph);
+        bodyDivision.appendChild(paragraph);
+
+        // resultDivision に Bootstrap のスタイルを適用する
+        resultDivision.setAttribute('class', 'card');
+
+        // headerDivision と bodyDivision を resultDivision に差し込む
+        resultDivision.appendChild(headerDivision);
+        resultDivision.appendChild(bodyDivision);
 
         tweetDivision.innerText = '';
         const anchor = document.createElement('a');
         const hrefValue = 'https://twitter.com/intent/tweet?button_hashtag='
-         + encodeURIComponent('あなたのいいところ') + '&ref_src=twsrc%5Etfw';
+            + encodeURIComponent('あなたのいいところ') + '&ref_src=twsrc%5Etfw';
         anchor.setAttribute('href', hrefValue);
         anchor.setAttribute('class', 'twitter-hashtag-button');
         anchor.setAttribute('data-text', result);
@@ -44,8 +58,8 @@ assessmentButton.addEventListener(
 userNameInput.addEventListener(
     'keydown',
     (event) => {
-        if(event.code === 'Enter') {
-            assessmentButton.dispatchEvent(new Event ('click'));
+        if (event.code === 'Enter') {
+            assessmentButton.dispatchEvent(new Event('click'));
         }
     }
 );
@@ -77,7 +91,7 @@ const answers = [
 function assessment(userName) {
 
     let sumOfCharCode = 0;
-    for(let i = 0; i < userName.length; i++) {
+    for (let i = 0; i < userName.length; i++) {
         sumOfCharCode += userName.charCodeAt(i);
     }
 
@@ -99,19 +113,19 @@ function test() {
         assessment('太郎') === '太郎のいいところは決断力です。太郎がする決断にいつも助けられる人がいます。',
         '診断結果の文言の特定の部分を名前に置き換える処理がが正しくありません。'
     );
-  
+
     console.log('次郎');
     console.assert(
         assessment('次郎') === '次郎のいいところは自制心です。やばいと思ったときにしっかりと衝動を抑えられる次郎が皆から評価されています。',
         '診断結果の文言の特定の部分を名前に置き換える処理がが正しくありません。'
     );
-  
+
     console.log('花子');
     console.assert(
         assessment('花子') === '花子のいいところはまなざしです。花子に見つめられた人は、気になって仕方がないでしょう。',
         '診断結果の文言の特定の部分を名前に置き換える処理がが正しくありません。'
     );
-  
+
     console.assert(assessment('太郎') === assessment('太郎'));
     console.assert(assessment('次郎') === assessment('次郎'));
     console.assert(assessment('花子') === assessment('花子'));
